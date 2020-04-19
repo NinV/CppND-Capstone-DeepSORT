@@ -12,8 +12,14 @@ private:
     float confidence_;
 
 public:
-    //This class represents a bounding box detection in a single image.
+    // This class represents a bounding box detection in a single image.
     Detection(cv::Rect box, float confidence, int classIdx);
+
+    // get top-left corner
+    cv::Point_<int> getTl();
+
+    // get bottom-right corner
+    cv::Point_<int> getBr();
 
     // Convert bounding box to format `(min x, min y, max x, max y)`
     std::vector<float> to_tlbr();

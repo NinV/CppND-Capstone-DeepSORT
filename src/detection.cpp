@@ -1,9 +1,19 @@
 #include "detection.h"
 #include <fstream>
+#include <iostream>
 
 Detection::Detection(cv::Rect box, float confidence, int classIdx): box_(std::move(box)),
                                                                       confidence_(confidence),
                                                                       classIdx_(classIdx){}
+
+
+cv::Point_<int> Detection::getTl() {
+    return box_.tl();
+}
+
+cv::Point_<int> Detection::getBr() {
+    return box_.br();
+}
 
 //std::vector<float> Detection::to_tlbr(){
 //    std::vector<float> tlbr(_tlwh);
@@ -20,13 +30,21 @@ Detection::Detection(cv::Rect box, float confidence, int classIdx): box_(std::mo
 //    return xyah;
 //};
 Detector::Detector(){
-    std::string modelConfiguration = "../data/yolov3-spp.cfg";
-    std::string modelWeights = "../data/yolov3-spp.weights";
+    std::string modelConfiguration = "../data/yolov3-tiny.cfg";
+    std::string modelWeights = "../data/yolov3-tiny.weights";
 
     // Load the network
     net_ = cv::dnn::readNetFromDarknet(modelConfiguration, modelWeights);
     net_.setPreferableBackend(cv::dnn::DNN_BACKEND_OPENCV);
     net_.setPreferableTarget(cv::dnn::DNN_TARGET_CPU);
+
+    // load class name
+    loadClassNames_();
+
+    // get out layer names
+    getOutLayersNames();
+
+    std::cout << "Construct detector\n";
 
 }
 
