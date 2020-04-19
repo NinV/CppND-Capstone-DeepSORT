@@ -1,10 +1,18 @@
-cmake_minimum_required(VERSION 3.7)
+cmake_minimum_required(VERSION 3.10)
 
-add_definitions(-std=c++17)
+# set(CMAKE_CXX_STANDARD 17)
+project(cppnd-capstone-deepSORT)
+set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-std=c++17 -pthread")
 
-set(CXX_FLAGS "-Wall")
-set(CMAKE_CXX_FLAGS, "${CXX_FLAGS}")
+find_package(OpenCV 4.3 REQUIRED)
 
-project(HelloWorld)
+include_directories(${OpenCV_INCLUDE_DIRS})
+link_directories(${OpenCV_LIBRARY_DIRS})
+add_definitions(${OpenCV_DEFINITIONS})
 
-add_executable(HelloWorld src/main.cpp)
+# Find all executables
+file(GLOB project_SRCS src/*.cpp) #src/*.h
+
+# Add project executable
+add_executable(deepSORT ${project_SRCS} src/detection.h src/detection.cpp)
+target_link_libraries(deepSORT ${OpenCV_LIBRARIES})
