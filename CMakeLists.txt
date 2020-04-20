@@ -14,5 +14,5 @@ add_definitions(${OpenCV_DEFINITIONS})
 file(GLOB project_SRCS src/*.cpp) #src/*.h
 
 # Add project executable
-add_executable(deepSORT ${project_SRCS} src/detection.h src/detection.cpp)
+add_executable(deepSORT ${project_SRCS} src/detection.h src/detection.cpp src/track.cpp src/track.h)
 target_link_libraries(deepSORT ${OpenCV_LIBRARIES})
