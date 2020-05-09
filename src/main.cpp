@@ -10,7 +10,7 @@ using namespace std;
 
 
 void drawDetection(Detection &det, cv::Mat &frame){
-    cv::rectangle(frame, det.getTl(), det.getBr(), cv::Scalar(255, 178, 50), 3);
+    cv::rectangle(frame, det.box, cv::Scalar(255, 178, 50), 3);
 }
 
 
@@ -45,9 +45,8 @@ int main(int argc, char *argv[])
             break;
         }
         ++frameNum;
-        cout << "Frame: " << frameNum << "# ";
-        cout << endl;
         std::vector<Detection> detections = detector.detect(frame);
+        cout << "Frame: " << frameNum << ". Found: " << detections.size() << endl;
         for(Detection det: detections){
             drawDetection(det, frame);
         }

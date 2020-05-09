@@ -6,20 +6,20 @@
 #ifndef CPPND_CAPSTONE_DEEPSORT_DETECTION_H
 #define CPPND_CAPSTONE_DEEPSORT_DETECTION_H
 class Detection{
-private:
-    cv::Rect box_;
-    int classIdx_;
-    float confidence_;
-
 public:
+    const cv::Rect box;      // for drawing
+    const float x, y, w, h;
+    int classIdx;
+    float confidence;
+
     // This class represents a bounding box detection in a single image.
-    Detection(cv::Rect box, float confidence, int classIdx);
+    Detection(cv::Rect2d &box, float confidence, int classIdx);
 
     // get top-left corner
-    cv::Point_<int> getTl();
+//    cv::Point_<int> getTl();
 
     // get bottom-right corner
-    cv::Point_<int> getBr();
+//    cv::Point_<int> getBr();
 
     // Convert bounding box to format `(min x, min y, max x, max y)`
     std::vector<float> to_tlbr();
