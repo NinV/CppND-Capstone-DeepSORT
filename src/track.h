@@ -16,11 +16,16 @@ typedef Eigen::Matrix<float, 8, 8> CovarianceTrackValue;
  A: box aspect ratio = width / height
  H: box height
 */
-enum TrackValueIndex { Cx, Cy, A, H, dCx, dCy, dA, dH};
+enum TrackValueIndex { Cx, Cy, A, H, dCx, dCy, dA, dH };
 
 struct TrackValue{
     MeanTrackValue mean;
     CovarianceTrackValue covariance;
+
+
+    TrackValue()= default;
+    TrackValue(MeanTrackValue &_mean,
+               CovarianceTrackValue &_covariance):mean(_mean),covariance(_covariance){};
 };
 
 
