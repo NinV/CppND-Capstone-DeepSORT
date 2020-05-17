@@ -2,18 +2,20 @@
 #include "string"
 #include "opencv2/core.hpp"
 #include "opencv2/dnn.hpp"
+#include "KalmanFilter.h"
 
 #ifndef CPPND_CAPSTONE_DEEPSORT_DETECTION_H
 #define CPPND_CAPSTONE_DEEPSORT_DETECTION_H
 class Detection{
 public:
     const cv::Rect box;         // for drawing so we use cv::Rect_<int>
-    const float x, y, w, h;     // for tracking
+    const float x, y, w, h;
     const int classIdx;
     const float confidence;
 
     // This class represents a bounding box detection in a single image.
     Detection(cv::Rect2d &box, float confidence, int classIdx);
+    Measurement to_xyah();
 };
 
 

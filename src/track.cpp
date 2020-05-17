@@ -4,18 +4,37 @@ Track::Track(TrackValue &_track_value, int _trackId, int _n_init, int _max_age){
     trackId_ = _trackId;
     n_init_ = _n_init;
     max_age_ = _max_age;
-    track_value_ = _track_value;
-    calc_box();
+    track_value = _track_value;
+
 }
 
-void Track::calc_box() {
-    float width = track_value_.state_vector[A] * track_value_.state_vector[H];
-    box_ = cv::Rect(int(track_value_.state_vector[Cx] - width / 2),
-                    int(track_value_.state_vector[Cy] - track_value_.state_vector[H] / 2),
+cv::Rect Track::box() {
+    double width = track_value.state_vector[A] * track_value.state_vector[H];
+    return cv::Rect(int(track_value.state_vector[Cx] - width / 2),
+                    int(track_value.state_vector[Cy] - track_value.state_vector[H] / 2),
                     int(width),
-                    int(track_value_.state_vector[H])
+                    int(track_value.state_vector[H])
             );
 }
 
-StateVector & Track::state_vector() {return track_value_.state_vector;}
-StateCovariance & Track::covariance() { return track_value_.covariance;}
+void Track::predict(KalmanFilter &kf) {
+    kf.predict(track_value);
+    age_ += 1;
+    time_since_update_ += 1;
+}
+
+void Track::update(KalmanFilter &kf, Detection &det) {
+    Measurement m = det.to_xyah();
+    kf.update(track_value, m);
+
+    hits_ += 1;
+    time_since_update_ = 0;
+    if (state_ == Tentative && hits_ > n_init_){
+        state_ = Confirmed;
+    }
+}
+
+void Track::mark_missed() {
+    if (state_ == Tentative || time_since_update_ > max_age_){state_ = Deleted;}
+//    else if (time_since_update_ > max_age_) {state_ = Deleted;}
+}

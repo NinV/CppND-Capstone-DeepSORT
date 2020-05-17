@@ -11,6 +11,12 @@ Detection::Detection(cv::Rect2d &_box, float _confidence, int _classIdx):
         h(_box.height),
         box(_box){}
 
+Measurement Detection::to_xyah() {
+    Measurement xyah;
+    xyah << x, y, w/h, h;
+    return xyah;
+}
+
 Detector::Detector(){
     std::string modelConfiguration = "../data/yolov3-tiny.cfg";
     std::string modelWeights = "../data/yolov3-tiny.weights";
