@@ -1,34 +1,12 @@
 #include <vector>
 #include "opencv2/core.hpp"
-#include "Eigen/Dense"
+#include "KalmanFilter.h"
 
 #ifndef CPPND_CAPSTONE_DEEPSORT_TRACK_H
 #define CPPND_CAPSTONE_DEEPSORT_TRACK_H
 
+
 enum TrackState { Tentative, Confirmed, Deleted };
-
-
-typedef Eigen::Matrix<float, 8, 1> MeanTrackValue;
-typedef Eigen::Matrix<float, 8, 8> CovarianceTrackValue;
-/*
- enum TrackValueIndex
- Cx, Cy: box center
- A: box aspect ratio = width / height
- H: box height
-*/
-enum TrackValueIndex { Cx, Cy, A, H, dCx, dCy, dA, dH };
-
-struct TrackValue{
-    MeanTrackValue mean;
-    CovarianceTrackValue covariance;
-
-
-    TrackValue()= default;
-    TrackValue(MeanTrackValue &_mean,
-               CovarianceTrackValue &_covariance):mean(_mean),covariance(_covariance){};
-};
-
-
 using namespace std;
 class Track {
 private:
@@ -40,8 +18,8 @@ private:
     void calc_box();
 public:
     Track(TrackValue &_track_value, int _trackId, int _n_init, int _max_age);
-    MeanTrackValue &mean();
-    CovarianceTrackValue &covariance();
+    StateVector &state_vector();
+    StateCovariance &covariance();
 
     // predict tracked values using Kalman filter
     // void predict();
