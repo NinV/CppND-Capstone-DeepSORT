@@ -2,33 +2,15 @@
 #include <fstream>
 #include <iostream>
 
-Detection::Detection(cv::Rect box, float confidence, int classIdx): box_(std::move(box)),
-                                                                      confidence_(confidence),
-                                                                      classIdx_(classIdx){}
+Detection::Detection(cv::Rect2d &_box, float _confidence, int _classIdx):
+        confidence(_confidence),
+        classIdx(_classIdx),
+        x(_box.x),
+        y(_box.y),
+        w(_box.width),
+        h(_box.height),
+        box(_box){}
 
-
-cv::Point_<int> Detection::getTl() {
-    return box_.tl();
-}
-
-cv::Point_<int> Detection::getBr() {
-    return box_.br();
-}
-
-//std::vector<float> Detection::to_tlbr(){
-//    std::vector<float> tlbr(_tlwh);
-//    tlbr[2] += _tlwh[2];
-//    tlbr[3] += _tlwh[3];
-//    return tlbr;
-//}
-//
-//std::vector<float> Detection::to_xyah(){
-//    std::vector<float> xyah(_tlwh);
-//    xyah[0] += _tlwh[2] / 2;
-//    xyah[1] += _tlwh[3] / 2;
-//    xyah[2] /= _tlwh[3];
-//    return xyah;
-//};
 Detector::Detector(){
     std::string modelConfiguration = "../data/yolov3-tiny.cfg";
     std::string modelWeights = "../data/yolov3-tiny.weights";
@@ -90,7 +72,7 @@ std::vector<Detection> Detector::postprocess_(const std::vector<cv::Mat> &outs, 
     {
         std::vector<int> classIds;
         std::vector<float> confidences;
-        std::vector<cv::Rect> boxes;
+        std::vector<cv::Rect2d> boxes;
         std::vector<Detection> detections;
 
         for (const auto & out : outs)
@@ -108,16 +90,16 @@ std::vector<Detection> Detector::postprocess_(const std::vector<cv::Mat> &outs, 
                 minMaxLoc(scores, 0, &confidence, 0, &classIdPoint);
                 if (confidence > confThreshold_)
                 {
-                    int centerX = (int)(data[0] * frame.cols);
-                    int centerY = (int)(data[1] * frame.rows);
-                    int width = (int)(data[2] * frame.cols);
-                    int height = (int)(data[3] * frame.rows);
-                    int left = centerX - width / 2;
-                    int top = centerY - height / 2;
+                    auto cx = (double)(data[0] * frame.cols);
+                    auto cy = (double)(data[1] * frame.rows);
+                    auto w = (double)(data[2] * frame.cols);
+                    auto h = (double)(data[3] * frame.rows);
+                    auto left = cx - w / 2;
+                    auto top = cy - h / 2;
 
                     classIds.push_back(classIdPoint.x);
                     confidences.push_back((float)confidence);
-                    boxes.push_back(cv::Rect(left, top, width, height));
+                    boxes.emplace_back(cv::Rect2d(left, top, w, h));
                 }
             }
         }
@@ -128,8 +110,7 @@ std::vector<Detection> Detector::postprocess_(const std::vector<cv::Mat> &outs, 
         cv::dnn::NMSBoxes(boxes, confidences, confThreshold_, nmsThreshold_, indices);
         for (int idx : indices)
         {
-            cv::Rect box = boxes[idx];
-            detections.emplace_back(Detection(box, confidences[idx], classIds[idx]));
+            detections.emplace_back(boxes[idx], confidences[idx], classIds[idx]);
         }
         return detections;
     }
