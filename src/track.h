@@ -25,7 +25,6 @@ private:
                                     // first `n_init` frames
 
     TrackState state_ = Tentative;
-    cv::Rect box();
 public:
     TrackValue track_value;
     Track(TrackValue &_track_value, int _trackId, int _n_init, int _max_age);
@@ -36,6 +35,7 @@ public:
     bool is_confirmed(){return state_ == Confirmed;}
     bool is_deleted(){return state_ == Deleted;}
     vector<double> to_tlbr();
+    cv::Rect box();
 };
 
 #endif //CPPND_CAPSTONE_DEEPSORT_TRACK_H

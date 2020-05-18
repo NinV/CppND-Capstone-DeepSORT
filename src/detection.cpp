@@ -13,7 +13,7 @@ Detection::Detection(cv::Rect2d &_box, float _confidence, int _classIdx):
 
 Measurement Detection::to_xyah() {
     Measurement xyah;
-    xyah << x, y, w/h, h;
+    xyah << x + w/2, y + h/2, w/h, h;
     return xyah;
 }
 
