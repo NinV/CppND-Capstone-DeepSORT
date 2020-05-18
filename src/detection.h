@@ -16,6 +16,7 @@ public:
     // This class represents a bounding box detection in a single image.
     Detection(cv::Rect2d &box, float confidence, int classIdx);
     Measurement to_xyah();
+    std::vector<double> to_tlbr();
 };
 
 

@@ -17,6 +17,10 @@ Measurement Detection::to_xyah() {
     return xyah;
 }
 
+std::vector<double> Detection::to_tlbr() {
+    std::vector<double> tlbr{y, x, y + h, x + w};
+}
+
 Detector::Detector(){
     std::string modelConfiguration = "../data/yolov3-tiny.cfg";
     std::string modelWeights = "../data/yolov3-tiny.weights";

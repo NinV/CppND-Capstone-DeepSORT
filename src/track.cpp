@@ -38,3 +38,14 @@ void Track::mark_missed() {
     if (state_ == Tentative || time_since_update_ > max_age_){state_ = Deleted;}
 //    else if (time_since_update_ > max_age_) {state_ = Deleted;}
 }
+
+vector<double> Track::to_tlbr() {
+    double width = track_value.state_vector[A] * track_value.state_vector[H];
+    double t = track_value.state_vector[Cy] - track_value.state_vector[H] / 2;
+    double l = track_value.state_vector[Cx] - width / 2;
+    double b = t + track_value.state_vector[H];
+    double r = l + width;
+
+    vector<double> tlbr{t, l, b, r};
+    return tlbr;
+}

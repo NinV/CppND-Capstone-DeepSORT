@@ -32,10 +32,10 @@ public:
     void predict(KalmanFilter &kf);
     void update(KalmanFilter &kf, Detection &det);
     void mark_missed();
-
     bool is_tentative(){return state_ == Tentative;}
     bool is_confirmed(){return state_ == Confirmed;}
     bool is_deleted(){return state_ == Deleted;}
+    vector<double> to_tlbr();
 };
 
 #endif //CPPND_CAPSTONE_DEEPSORT_TRACK_H
