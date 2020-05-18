@@ -8,7 +8,7 @@
 #define CPPND_CAPSTONE_DEEPSORT_DETECTION_H
 class Detection{
 public:
-    const cv::Rect box;         // for drawing so we use cv::Rect_<int>
+    cv::Rect box;         // for drawing so we use cv::Rect_<int>
     const float x, y, w, h;
     const int classIdx;
     const float confidence;

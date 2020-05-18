@@ -36,6 +36,8 @@ public:
     bool is_deleted(){return state_ == Deleted;}
     vector<double> to_tlbr();
     cv::Rect box();
+    TrackState state(){return state_;}
+    int trackID (){return trackId_;}
 };
 
 #endif //CPPND_CAPSTONE_DEEPSORT_TRACK_H
