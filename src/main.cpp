@@ -59,7 +59,6 @@ int main(int argc, char *argv[])
         }
         ++frameNum;
         std::vector<Detection> detections = detector.detect(frame);
-        cout << "Frame: " << frameNum << ". Found: " << detections.size() << endl;
         tracker.predict();
         tracker.update(detections);
         for(Detection &det: detections){
@@ -71,6 +70,8 @@ int main(int argc, char *argv[])
         imshow("tracking", frame);
         char c = (char)cv::waitKey(1);
         if (c == 27) break;
+        cout << "Frame: " << frameNum << ". Detect: " << detections.size() << " Num track:" << tracker.tracks().size() <<endl;
+        std::cout << "\n";
     }
     return 0;
 }

@@ -10,6 +10,7 @@ void Tracker::initiate_track(TrackValue tv) {
     int trackId = next_track_idx();
     shared_ptr<Track> t = make_shared<Track>(tv, trackId, n_init, max_age);
     tracks_.insert({trackId, t});
+    std::cout << "Initiate a track object with trachID = " << trackId << "\n";
 }
 
 void Tracker::remove_track(int trackId) {
@@ -104,7 +105,6 @@ void Tracker::update(vector <Detection> &detections) {
         if(det.mstate == Unmatched){
             TrackValue tv = kf_.initiate(det.to_xyah());
             this->initiate_track(tv);}
-            std::cout << "Initiate a track object with trachID = " << (--tracks_.end())->first << "\n";
     }
 }
 
