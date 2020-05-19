@@ -8,6 +8,7 @@
 
 
 enum TrackState { Tentative, Confirmed, Deleted };
+enum MatchState { Matched, Unmatched, Pending};
 using namespace std;
 class Track {
 private:
@@ -25,19 +26,26 @@ private:
                                     // first `n_init` frames
 
     TrackState state_ = Tentative;
+    TrackValue track_value_;
+    MatchState mstate_= Pending;    // should be reset to Pending before matching (to detections) process
+
 public:
-    TrackValue track_value;
     Track(TrackValue &_track_value, int _trackId, int _n_init, int _max_age);
     void predict(KalmanFilter &kf);
     void update(KalmanFilter &kf, Detection &det);
     void mark_missed();
+
+    // check state
     bool is_tentative(){return state_ == Tentative;}
     bool is_confirmed(){return state_ == Confirmed;}
     bool is_deleted(){return state_ == Deleted;}
+
+    // getter
     vector<double> to_tlbr();
     cv::Rect box();
     TrackState state(){return state_;}
     int trackID (){return trackId_;}
+    TrackValue track_value(){return track_value_;}
 };
 
 #endif //CPPND_CAPSTONE_DEEPSORT_TRACK_H
