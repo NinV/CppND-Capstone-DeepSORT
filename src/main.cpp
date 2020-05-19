@@ -4,13 +4,25 @@
 #include <opencv2/highgui.hpp>
 #include "opencv2/imgproc.hpp"
 #include "detection.h"
+#include "tracker.h"
 
 
 using namespace std;
 
 
 void drawDetection(Detection &det, cv::Mat &frame){
+    auto tlbr = det.to_tlbr();
+    std::cout << "[Detection] ";
+    std::cout << "top: " << tlbr[Top] << " left: " << tlbr[Left] << " bottom: " << tlbr[Bottom] << " right: " << tlbr[Right] << "\n";
     cv::rectangle(frame, det.box, cv::Scalar(255, 178, 50), 3);
+}
+
+void drawTrack(Track &t, cv::Mat &frame){
+    auto tlbr = t.to_tlbr();
+    std::cout << "[TrackID = " << t.trackID() <<"] ";
+    std::cout << "top: " << tlbr[Top] << " left: " << tlbr[Left] << " bottom: " << tlbr[Bottom] << " right: " << tlbr[Right] << "\n";
+//    std::cout << t.track_value().state_vector << "\n";
+    cv::rectangle(frame, t.box(), cv::Scalar(20, 100, 50), 3);
 }
 
 
@@ -22,6 +34,7 @@ int main(int argc, char *argv[])
         return -1;
     }
     Detector detector = Detector();
+    Tracker tracker = Tracker();
     const string videoInput = argv[1];
 
     int frameNum = -1;          // Frame counter
@@ -46,13 +59,19 @@ int main(int argc, char *argv[])
         }
         ++frameNum;
         std::vector<Detection> detections = detector.detect(frame);
-        cout << "Frame: " << frameNum << ". Found: " << detections.size() << endl;
-        for(Detection det: detections){
+        tracker.predict();
+        tracker.update(detections);
+        for(Detection &det: detections){
             drawDetection(det, frame);
+        }
+        for(auto &t: tracker.tracks()){
+            drawTrack(*t, frame);
         }
         imshow("tracking", frame);
         char c = (char)cv::waitKey(1);
         if (c == 27) break;
+        cout << "Frame: " << frameNum << ". Detect: " << detections.size() << " Num track:" << tracker.tracks().size() <<endl;
+        std::cout << "\n";
     }
     return 0;
 }

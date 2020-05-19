@@ -76,14 +76,14 @@ ProjectedValue KalmanFilter::project(const TrackValue &t) {
     innovation_cov(A, A) = 1e-2;
     innovation_cov(H, H) = position_covariance;
 
-    std::cout << "innovation_cov:\n" << innovation_cov << "\n";
+//    std::cout << "innovation_cov:\n" << innovation_cov << "\n";
 
     ProjectedValue projected;
     projected.p_state = update_mat_ * t.state_vector;
     projected.p_covariance = update_mat_ * t.covariance * update_mat_.transpose() + innovation_cov;
 
-    std::cout << "p_state:\n" << projected.p_state << "\n";
-    std::cout << "p_covariance:\n" << projected.p_covariance << "\n";
+//    std::cout << "p_state:\n" << projected.p_state << "\n";
+//    std::cout << "p_covariance:\n" << projected.p_covariance << "\n";
 
     return projected;
 }
@@ -94,11 +94,11 @@ void KalmanFilter::update(TrackValue &t, Measurement &m) {
     auto kalman_gain = t.covariance * update_mat_.transpose() * projected.p_covariance.inverse();
     auto innovation = m - projected.p_state;
 
-    std::cout << "kalman_gain:\n" << kalman_gain << "\n";
-    std::cout << "innovation:\n" << innovation << "\n";
+//    std::cout << "kalman_gain:\n" << kalman_gain << "\n";
+//    std::cout << "innovation:\n" << innovation << "\n";
 
     t.state_vector = t.state_vector + (kalman_gain * innovation);
-    std::cout << "updated state_vector:\n" << t.state_vector << "\n";
+//    std::cout << "updated state_vector:\n" << t.state_vector << "\n";
     t.covariance = t.covariance - kalman_gain * projected.p_covariance * kalman_gain.transpose();
-    std::cout << "updated covariance:\n" << t.covariance << "\n";
+//    std::cout << "updated covariance:\n" << t.covariance << "\n";
 }
