@@ -4,7 +4,7 @@
 #define CPPND_CAPSTONE_DEEPSORT_IOU_MATCHING_H
 
 
-enum TLBR {top, left, bottom, right};
+enum TLBR {Top, Left, Bottom, Right};
 
 using namespace std;
 double area(vector<double> &tlbr);

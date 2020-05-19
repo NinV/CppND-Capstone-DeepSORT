@@ -2,13 +2,13 @@
 
 using namespace std;
 double area(vector<double> &tlbr){
-    return (tlbr[bottom] - tlbr[top]) * (tlbr[right] - tlbr[left]);
+    return (tlbr[Bottom] - tlbr[Top]) * (tlbr[Right] - tlbr[Left]);
 }
 
 
 double iou(vector<double> &tlbr1, vector<double> &tlbr2){
-    double vertical_overlap = max(min(tlbr1[bottom], tlbr2[bottom]) - max(tlbr1[top], tlbr2[top]), 0.0);
-    double horizontal_overlap = max(min(tlbr1[right], tlbr2[right]) - max(tlbr1[left], tlbr2[left]), 0.0);
+    double vertical_overlap = max(min(tlbr1[Bottom], tlbr2[Bottom]) - max(tlbr1[Top], tlbr2[Top]), 0.0);
+    double horizontal_overlap = max(min(tlbr1[Right], tlbr2[Right]) - max(tlbr1[Left], tlbr2[Left]), 0.0);
     double intersection = vertical_overlap * horizontal_overlap;
     return intersection / (area(tlbr1) + area(tlbr2) - intersection);
 }

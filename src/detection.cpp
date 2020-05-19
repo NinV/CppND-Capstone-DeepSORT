@@ -19,6 +19,7 @@ Measurement Detection::to_xyah() {
 
 std::vector<double> Detection::to_tlbr() {
     std::vector<double> tlbr{y, x, y + h, x + w};
+    return tlbr;
 }
 
 Detector::Detector(){

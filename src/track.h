@@ -8,7 +8,6 @@
 
 
 enum TrackState { Tentative, Confirmed, Deleted };
-enum MatchState { Matched, Unmatched, Pending};
 using namespace std;
 class Track {
 private:
@@ -27,7 +26,6 @@ private:
 
     TrackState state_ = Tentative;
     TrackValue track_value_;
-    MatchState mstate_= Pending;    // should be reset to Pending before matching (to detections) process
 
 public:
     Track(TrackValue &_track_value, int _trackId, int _n_init, int _max_age);
@@ -46,6 +44,8 @@ public:
     TrackState state(){return state_;}
     int trackID (){return trackId_;}
     TrackValue track_value(){return track_value_;}
+
+    MatchState mstate = Unmatched;
 };
 
 #endif //CPPND_CAPSTONE_DEEPSORT_TRACK_H
